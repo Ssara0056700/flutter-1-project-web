@@ -1,0 +1,26 @@
+[
+    {
+        "id": "1",
+        "name": "shoes1",
+        "price": 20.0,
+        "image": "https://example.com/yellow_rose.jpg"
+    },
+    {
+        "id": "2",
+        "name": "shoes2 ",
+        "price": 20.0,
+        "Image": "https://example.com/red_rose.jpg"
+    },
+    {
+        "id": "3",
+        "name": "shoes1",
+        "price": 20.0,
+        "Image": "https://example.com/white_rose.jpg"
+    },
+    {
+        "id": "4",
+        "name": "shoes3 ",
+        "price": 20.0,
+        "Image": "https://example.com/white_rose.jpg"
+    }
+]
