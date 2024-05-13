@@ -93,7 +93,7 @@ class HomePage extends StatelessWidget {
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => const OffersPage()),
+                  MaterialPageRoute(builder: (context) => OffersPage()),
                 );
               },
               style: ButtonStyle(
@@ -763,7 +763,13 @@ class CartPage extends StatelessWidget {
 }
 
 class OffersPage extends StatelessWidget {
-  const OffersPage({Key? key});
+  OffersPage({Key? key});
+
+  final List<String> imageUrls = [
+    'https://m.media-amazon.com/images/I/61w20RRQuhL.AC_UL480_FMwebp_QL65.jpg',
+    'https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcQz4YgQjra4PXNZNdNV53witOUEpIsBkWDSNf3REvrO2g6Z5vds',
+    'https://m.media-amazon.com/images/I/51Q16iN5lsL.AC_UL480_QL65.jpg',
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -773,24 +779,16 @@ class OffersPage extends StatelessWidget {
         backgroundColor: Color.fromARGB(255, 167, 181, 195),
       ),
       body: ListView.builder(
-        itemCount: 3,
+        itemCount: imageUrls.length,
         itemBuilder: (context, index) {
-          return ListTile(
-            title: Text('Shoes ${index + 1}'),
-            subtitle: const Text('Price: \$20'),
-            trailing: ElevatedButton(
-              onPressed: () {
-                addToCart(context, 'Shoes ${index + 1}');
-              },
-              style: ButtonStyle(
-                backgroundColor: MaterialStateProperty.all<Color>(
-                  Color.fromARGB(255, 232, 243, 253),
-                ),
-                foregroundColor: MaterialStateProperty.all<Color>(
-                    const Color.fromARGB(255, 0, 0, 0)),
-              ),
-              child: const Text('Add to Cart'),
-            ),
+          return OfferItem(
+            productName: 'Shoes ${index + 1}',
+            offerPrice: '\$20',
+            originalPrice: '\$30',
+            imageUrl: imageUrls[index],
+            onTapBuyNow: () {
+              addToCart(context, 'Shoes ${index + 1}');
+            },
           );
         },
       ),
@@ -798,7 +796,7 @@ class OffersPage extends StatelessWidget {
   }
 
   void addToCart(BuildContext context, String productName) {
-    CartPage.products.add(productName); // إضافة المنتج إلى قائمة السلة
+    CartPage.products.add(productName);
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text('$productName added to cart!'),
@@ -811,11 +809,15 @@ class OfferItem extends StatelessWidget {
   final String productName;
   final String offerPrice;
   final String originalPrice;
+  final String imageUrl;
+  final VoidCallback? onTapBuyNow;
 
   const OfferItem({
     required this.productName,
     required this.offerPrice,
     required this.originalPrice,
+    required this.imageUrl,
+    this.onTapBuyNow,
     Key? key,
   }) : super(key: key);
 
@@ -823,6 +825,12 @@ class OfferItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return Card(
       child: ListTile(
+        leading: Image.network(
+          imageUrl,
+          width: 60,
+          height: 60,
+          fit: BoxFit.cover,
+        ),
         title: Text(productName),
         subtitle: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -832,20 +840,14 @@ class OfferItem extends StatelessWidget {
           ],
         ),
         trailing: ElevatedButton(
-          onPressed: () {
-            // Add action when the button is pressed
-            // Navigate to cart page
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => const CartPage()),
-            );
-          },
+          onPressed: onTapBuyNow, // استدعاء onTapBuyNow عند الضغط
           style: ButtonStyle(
             backgroundColor: MaterialStateProperty.all<Color>(
               Color.fromARGB(255, 232, 243, 253),
-            ), // تحديد لون الخلفية
+            ),
             foregroundColor: MaterialStateProperty.all<Color>(
-                const Color.fromARGB(255, 0, 0, 0)), // تحديد لون النص
+              const Color.fromARGB(255, 0, 0, 0),
+            ),
           ),
           child: const Text('Buy Now'),
         ),
